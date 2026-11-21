@@ -1,0 +1,9 @@
+## Interface: 16001
+## Title: LaptopControls
+## Notes: Trackpad helper: A/D turn out of combat and strafe in combat, plus trackpad camera presets. /lc
+## Author: Felix
+## Version: 0.1.0
+## SavedVariables: LaptopControlsDB
+
+Core.lua
+Panel.lua

@@ -1,0 +1,15 @@
+## Interface: 16001
+## Title: MageCoach
+## Notes: Mage leveling helper for WoW Forever: talent coach, trainer list, tips, map pins and zone suggestions.
+## Author: Felix
+## Version: 0.1.0
+## SavedVariables: MageCoachDB
+## SavedVariablesPerCharacter: MageCoachCharDB
+
+Data.lua
+Core.lua
+Map.lua
+Rotation.lua
+Power.lua
+Dps.lua
+Meter.lua
