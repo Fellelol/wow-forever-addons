@@ -210,7 +210,7 @@ D.Paths = {
             { 37, "Shatter: Nova -> Cone of Cold crits. Remember Blizzard now breaks Frost Nova." },
             { 40, "Ice Barrier: absorb + 15% Frost damage while it holds. Keep it up between pulls." },
             { 41, "Arcane row 1 is your choice: Arcane Resilience, Wand Specialization or Improved Channeling." },
-            { 56, "Arcane Meditation: 50% regen while casting. Check in-game whether it stacks with Mage Armor." },
+            { 56, "Arcane Meditation: 50% regen while casting, and it stacks with Mage Armor. Wear Mage Armor for long AoE sessions." },
         },
         rotation = {
             "Below 24: single target (Frostbolt, Ice Lance on frozen). Not enough mana for AoE yet.",
@@ -400,7 +400,7 @@ D.GeneralTips = {
     "Polymorph lasts 20 / 30 / 40 / 50 sec by rank and breaks on damage. Ranks 1-3 are enough while leveling.",
     "Mana: 1 Intellect = 15 mana (the first 20 give 1 each). Gnome Expansive Mind is +5% total mana in Forever.",
     "Arcane Mind: older notes say +20% Intellect, the current talent data says +10% Intellect and +100% Arcane crit damage.",
-    "Mage Armor and Arcane Meditation both keep 50% regen while casting; check in-game whether they stack.",
+    "Mage Armor and Arcane Meditation each keep 50% regen while casting, and they stack (confirmed in-game). Less drinking between pulls.",
     "Evocation: 8 sec channel, +1,500% mana regen, 8 min cooldown. Mana gems vanish after 15 min logged out.",
 }
 
