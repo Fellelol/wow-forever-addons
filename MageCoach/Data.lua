@@ -1,5 +1,8 @@
--- MageCoach data. Talent paths and spell lists follow the Mobalytics "WoW Forever Mage Leveling Guide"
--- (by Asuna_qt). Map coordinates are approximate; add your own with /mc pin <note>.
+-- MageCoach data. Talent paths started from the Mobalytics "WoW Forever Mage Leveling Guide" (by Asuna_qt)
+-- and are checked against "WoW Forever Mage: Spells and Talent Trees" (talent data from client build
+-- 1.60.1.70755, spell data from 1.60.1.70938, hotfixes to 17 Nov 2026): every point is legal (a row
+-- opens per 5 points in that tree, prerequisites at max rank). Map coordinates are approximate;
+-- add your own with /mc pin <note>.
 local _, MC = ...
 MC.Data = {}
 local D = MC.Data
@@ -7,7 +10,8 @@ local D = MC.Data
 ------------------------------------------------------------------------
 -- Talent paths: entry i is the point spent at level (i + 9), i.e. [1] = level 10.
 ------------------------------------------------------------------------
-D.PathOrder = { "arcane", "frost", "fire", "frostaoe" }
+D.PathOrder = { "frostaoe", "arcane", "frost", "fire" }
+D.DefaultPath = "frostaoe"
 
 D.Paths = {
     arcane = {
@@ -170,23 +174,22 @@ D.Paths = {
         name = "Frost AoE",
         color = "ff9ad6ff",
         split = "18 / 0 / 33",
-        blurb = "AoE grinding: gather packs, Frost Nova, Blizzard, kite. Weak single target and very mana hungry.",
+        blurb = "Recommended (build guide): quest single target until 24, then AoE pulls. Mana is the limit, so the build front-loads Frost Channeling and Cold Snap.",
         talents = {
-            "Precision", "Precision", "Precision",                                                -- 10-12
-            "Frost Warding", "Frost Warding",                                                     -- 13-14
-            "Improved Frost Nova", "Improved Frost Nova",                                         -- 15-16
-            "Permafrost", "Permafrost", "Permafrost",                                             -- 17-19
+            "Improved Frostbolt", "Improved Frostbolt", "Improved Frostbolt", "Improved Frostbolt", "Improved Frostbolt", -- 10-14
+            "Precision", "Precision", "Precision",                                                -- 15-17
+            "Permafrost", "Permafrost",                                                           -- 18-19
             "Ice Lance",                                                                          -- 20
             "Improved Blizzard", "Improved Blizzard", "Improved Blizzard",                        -- 21-23
             "Frost Channeling",                                                                   -- 24
-            "Ice Block",                                                                          -- 25
-            "Arctic Reach", "Arctic Reach",                                                       -- 26-27
-            "Shatter", "Shatter", "Shatter",                                                      -- 28-30
-            "Fingers of Frost",                                                                   -- 31
-            "Cold Snap",                                                                          -- 32
-            "Improved Cone of Cold", "Improved Cone of Cold", "Improved Cone of Cold",            -- 33-35
-            "Frost Channeling", "Frost Channeling",                                               -- 36-37
-            "Ice Shards", "Ice Shards",                                                           -- 38-39
+            "Ice Block",                                                                          -- 25 (earliest)
+            "Frost Channeling", "Frost Channeling",                                               -- 26-27
+            "Improved Frost Nova", "Improved Frost Nova",                                         -- 28-29
+            "Cold Snap",                                                                          -- 30 (earliest)
+            "Improved Cone of Cold", "Improved Cone of Cold", "Improved Cone of Cold",            -- 31-33
+            "Permafrost",                                                                         -- 34
+            "Arctic Reach", "Arctic Reach",                                                       -- 35-36
+            "Shatter", "Shatter", "Shatter",                                                      -- 37-39
             "Ice Barrier",                                                                        -- 40
             "Arcane Resilience", "Arcane Resilience", "Arcane Resilience",                        -- 41-43 (any Arcane row 1)
             "Wand Specialization", "Wand Specialization",                                         -- 44-45
@@ -197,19 +200,28 @@ D.Paths = {
             "Ice Shards", "Ice Shards",                                                           -- 59-60 (or Magic Absorption)
         },
         notes = {
-            { 10, "Precision + Frost Warding for hit and survivability." },
-            { 15, "Improved Frost Nova (shorter CD) and Permafrost (stronger slows)." },
-            { 21, "Improved Blizzard: the slow that makes AoE kiting work." },
-            { 26, "Arctic Reach: longer Blizzard range for kiting." },
+            { 10, "Below 24 you lack the mana for AoE: Improved Frostbolt and Precision for fast single-target questing." },
+            { 18, "Permafrost: chills last 33% longer, so Cone of Cold's 6 sec slow becomes 8 sec." },
+            { 21, "Improved Blizzard: the slow that makes AoE kiting work. AoE becomes viable at 24." },
+            { 24, "Frost Channeling (-15% Frost mana) maxed by 27: mana is what limits how many AoE cycles you get." },
+            { 28, "From 28 AoE is efficient (about 850 damage per cycle vs 550-850 HP mobs). Improved Frost Nova: 25 -> 21 sec." },
+            { 30, "Cold Snap at the earliest level: from 30-40 bigger mobs need a second cycle (Nova + Cone of Cold again)." },
+            { 35, "Arctic Reach: +20% Blizzard range and Nova / Cone radius." },
+            { 37, "Shatter: Nova -> Cone of Cold crits. Remember Blizzard now breaks Frost Nova." },
+            { 40, "Ice Barrier: absorb + 15% Frost damage while it holds. Keep it up between pulls." },
             { 41, "Arcane row 1 is your choice: Arcane Resilience, Wand Specialization or Improved Channeling." },
+            { 56, "Arcane Meditation: 50% regen while casting. Check in-game whether it stacks with Mage Armor." },
         },
         rotation = {
-            "Keep Ice Barrier up (40+). Start with full mana and gems ready.",
-            "Gather a pack (wand, rank 1 spells, Frost Blast, running through), then Frost Nova.",
-            "Blink/run out to max Blizzard range and Blizzard.",
-            "When they reach you: Cone of Cold, step back, Arcane Explosion until Nova is back.",
-            "Packs at ~30-40%: Frost Nova -> Flamestrike -> Cone of Cold for Shatter crits, then Arcane Explosion.",
-            "Clean up stragglers with Fingers of Frost + Ice Lance.",
+            "Below 24: single target (Frostbolt, Ice Lance on frozen). Not enough mana for AoE yet.",
+            "Keep Ice Barrier up (40+). Start each pull with full mana and a gem ready.",
+            "Gather a pack (wand, rank 1 Frostbolt / Fire Blast, running through), then Frost Nova.",
+            "Do NOT Blizzard frozen mobs: since the 13 Nov hotfix Blizzard damage breaks Frost Nova.",
+            "Frozen pack: Cone of Cold for Shatter crits, then Blink / step out to max range.",
+            "Pack free and chasing you: Blizzard (Improved Blizzard slows them), then Arcane Explosion when they arrive.",
+            "Frost Nova and Cone of Cold on cooldown: Cold Snap resets both for a second cycle.",
+            "40-50: mobs at about 2,500 HP die in one cycle; skip AoE on 5,000 HP mobs.",
+            "Clean up stragglers with Ice Lance on frozen targets.",
         },
         skip = { ["Arcane Blast"] = true, ["Arcane Wrath"] = true, ["Pyroblast"] = true, ["Scorch"] = true, ["Fireball"] = true, ["Blast Wave"] = true },
         skipNote = "AoE Frost lives on Blizzard / Cone of Cold / Arcane Explosion / Frost Nova. Keep Fireball rank 1 to pull.",
@@ -217,12 +229,75 @@ D.Paths = {
 }
 
 ------------------------------------------------------------------------
--- Spells to learn. { level, spell, rank, onlyPath }
+-- Talent effects at max rank, from the build guide. { tree, row, ranks, effect }
+------------------------------------------------------------------------
+D.TalentInfo = {
+    -- Arcane
+    ["Wand Specialization"] = { "Arcane", 1, 2, "Wand damage +25%" },
+    ["Improved Channeling"] = { "Arcane", 1, 5, "Missiles never pushed back; Arcane Blast/Wrath 70%" },
+    ["Arcane Resilience"] = { "Arcane", 1, 3, "Armor +75% of your Intellect" },
+    ["Arcane Subtlety"] = { "Arcane", 2, 2, "Target resistances -15; Arcane threat -30%" },
+    ["Magic Absorption"] = { "Arcane", 2, 2, "Resistances +10; full resists give back 2% mana" },
+    ["Arcane Concentration"] = { "Arcane", 2, 5, "10% chance: next damage spell is free (Clearcasting)" },
+    ["Missile Barrage"] = { "Arcane", 2, 2, "Procs a free, twice as fast Arcane Missiles" },
+    ["Arcane Geometry"] = { "Arcane", 3, 2, "Arcane range +6 yd" },
+    ["Arcane Impact"] = { "Arcane", 3, 3, "Arcane crit +6%" },
+    ["Arcane Blast"] = { "Arcane", 3, 1, "Stacking nuke: +12% Int as spell damage per stack, cost doubles" },
+    ["Arcane Shielding"] = { "Arcane", 4, 2, "Mana Shield costs 33% less; Mage Armor resists +50%" },
+    ["Improved Counterspell"] = { "Arcane", 4, 2, "Counterspell also silences 4 sec" },
+    ["Arcane Meditation"] = { "Arcane", 4, 3, "50% mana regen while casting (needs Arcane Concentration 5/5)" },
+    ["Arcane Wrath"] = { "Arcane", 4, 1, "3.5 sec nuke, 6 sec CD, + 5% of max mana as damage" },
+    ["Presence of Mind"] = { "Arcane", 5, 1, "Next spell under 10 sec cast is instant (3 min)" },
+    ["Arcane Mind"] = { "Arcane", 5, 5, "Intellect +10%, Arcane crit damage +100%" },
+    ["Arcane Instability"] = { "Arcane", 6, 3, "Spell damage +3%, crit +3%" },
+    ["Arcane Power"] = { "Arcane", 7, 1, "15 sec: +30% damage, +30% mana cost (3 min)" },
+    -- Fire
+    ["Incineration"] = { "Fire", 1, 5, "Crit +10% on Fire Blast, Ice Lance, Arcane Blast, Scorch" },
+    ["Accelerant"] = { "Fire", 1, 5, "Fireball / Frostfire Bolt / Arcane Wrath cast -0.5 sec" },
+    ["Ignite"] = { "Fire", 2, 5, "Fire crits burn for 40% more over 4 sec" },
+    ["Flame Throwing"] = { "Fire", 2, 2, "Fire range +6 yd" },
+    ["Impact"] = { "Fire", 2, 3, "Fire spells 10% chance to stun 2 sec" },
+    ["Burning Soul"] = { "Fire", 3, 3, "Fire spells 70% pushback resist; Fire threat -30%" },
+    ["Improved Flamestrike"] = { "Fire", 3, 3, "Flamestrike crit +15%" },
+    ["Pyroblast"] = { "Fire", 3, 1, "6 sec cast nuke + burn" },
+    ["Improved Fire Blast"] = { "Fire", 3, 2, "Fire Blast CD -2 sec, range +15 yd" },
+    ["Improved Scorch"] = { "Fire", 4, 3, "Scorch: +3% Fire damage taken, 5 stacks" },
+    ["Improved Fire Ward"] = { "Fire", 4, 2, "Fire Ward 20% reflect" },
+    ["Heating Up"] = { "Fire", 4, 1, "Crits cut next Pyroblast cast 25%, 3 stacks (needs Pyroblast)" },
+    ["Master of Elements"] = { "Fire", 4, 3, "Fire/Frost crits refund 30% base mana" },
+    ["Critical Mass"] = { "Fire", 5, 3, "Fire crit +6%" },
+    ["Blast Wave"] = { "Fire", 5, 1, "Instant AoE + 50% slow, 45 sec CD" },
+    ["Fire Power"] = { "Fire", 6, 3, "+3% Fire damage per Fire effect on target, max +12%" },
+    ["Combustion"] = { "Fire", 7, 1, "+10% Fire crit per hit until 3 crits (needs Critical Mass)" },
+    -- Frost
+    ["Frost Warding"] = { "Frost", 1, 2, "Armor buffs +30%; Ice Barrier / Frost Ward absorb +20%" },
+    ["Improved Frostbolt"] = { "Frost", 1, 5, "Frostbolt cast -0.5 sec" },
+    ["Precision"] = { "Frost", 1, 3, "Spell hit +6%" },
+    ["Ice Shards"] = { "Frost", 2, 5, "Frost crit damage +100%" },
+    ["Frostbite"] = { "Frost", 2, 3, "Chills 15% chance to freeze 5 sec" },
+    ["Improved Frost Nova"] = { "Frost", 2, 2, "Frost Nova CD -4 sec" },
+    ["Permafrost"] = { "Frost", 2, 3, "Chills last 33% longer, slow +10%" },
+    ["Frost Channeling"] = { "Frost", 3, 3, "Frost mana cost -15%; Frost threat -30%" },
+    ["Improved Blizzard"] = { "Frost", 3, 3, "Blizzard slows 40%" },
+    ["Ice Lance"] = { "Frost", 3, 1, "Instant, 8 sec CD, 300% more vs frozen" },
+    ["Arctic Reach"] = { "Frost", 4, 2, "Frost range and Nova / Cone radius +20%" },
+    ["Ice Block"] = { "Frost", 4, 1, "10 sec immunity, 5 min CD" },
+    ["Shatter"] = { "Frost", 4, 3, "Crit +50% vs frozen targets" },
+    ["Improved Cone of Cold"] = { "Frost", 5, 3, "Cone of Cold damage +35%" },
+    ["Cold Snap"] = { "Frost", 5, 1, "Resets all Frost cooldowns (10 min)" },
+    ["Fingers of Frost"] = { "Frost", 5, 2, "Chills may make next 2 spells act as frozen (needs Ice Lance)" },
+    ["Winter's Chill"] = { "Frost", 6, 5, "Frostbolt stacks: Cone of Cold hits harder, up to 5" },
+    ["Ice Barrier"] = { "Frost", 7, 1, "Absorb shield, +15% Frost damage while up (needs Cold Snap)" },
+}
+
+------------------------------------------------------------------------
+-- Spells to learn. { level, spell, rank, onlyPath, note }
 ------------------------------------------------------------------------
 D.Spells = {
     { 1, "Frost Armor" }, { 1, "Arcane Intellect" },
     { 4, "Frostbolt" }, { 4, "Conjure Water" },
     { 6, "Conjure Food" }, { 6, "Fireball", 2 }, { 6, "Fire Blast" },
+    { 6, "Comprehend Scroll", nil, nil, "new Comprehension tab" }, { 6, "Study", nil, nil, "1 hour CD, needs a library" },
     { 8, "Frostbolt", 2 }, { 8, "Arcane Missiles" }, { 8, "Polymorph" },
     { 10, "Frost Armor", 2 }, { 10, "Frost Nova" }, { 10, "Conjure Water", 2 },
     { 12, "Fireball", 3 }, { 12, "Slow Fall" }, { 12, "Dampen Magic" }, { 12, "Conjure Food", 2 },
@@ -257,7 +332,8 @@ D.Spells = {
     { 48, "Arcane Missiles", 6 }, { 48, "Dampen Magic", 4 }, { 48, "Arcane Wrath", 3, "arcane" }, { 48, "Conjure Mana Citrine" },
     { 50, "Frostbolt", 9 }, { 50, "Ice Armor", 3 }, { 50, "Cone of Cold", 4 }, { 50, "Fire Ward", 4 }, { 50, "Frostfire Bolt", 2 },
     { 50, "Conjure Water", 6 }, { 50, "Arcane Blast", 4, "arcane" },
-    { 50, "Portals (city)", nil, nil, "Darnassus or Thunder Bluff (+ Teleport: Dalaran for Alliance)" },
+    { 50, "Portals (city)", nil, nil, "Darnassus or Thunder Bluff" },
+    { 50, "Teleport: Dalaran", nil, nil, "Alliance, new in Forever" },
     { 52, "Blizzard", 5 }, { 52, "Frost Ward", 4 }, { 52, "Ice Barrier", 3, "frost" }, { 52, "Scorch", 6 },
     { 52, "Blast Wave", 4, "fire" }, { 52, "Conjure Food", 6 }, { 52, "Mana Shield", 5 },
     { 54, "Arcane Explosion", 6 }, { 54, "Amplify Magic", 4 }, { 54, "Fireball", 10 }, { 54, "Fire Blast", 7 },
@@ -265,7 +341,9 @@ D.Spells = {
     { 56, "Ice Lance", 6, "frost" }, { 56, "Frostbolt", 10 }, { 56, "Flamestrike", 6 }, { 56, "Arcane Intellect", 5 },
     { 56, "Arcane Missiles", 8 }, { 56, "Arcane Brilliance" },
     { 58, "Cone of Cold", 5 }, { 58, "Ice Barrier", 4, "frost" }, { 58, "Scorch", 7 }, { 58, "Mage Armor", 3 }, { 58, "Conjure Mana Ruby" },
-    { 60, "Blizzard", 6 }, { 60, "Frostbolt", 11 }, { 60, "Frost Ward", 5 }, { 60, "Ice Armor", 4 }, { 60, "Fireball", 11 },
+    { 60, "Blizzard", 6 }, { 60, "Frostbolt", 11 }, { 60, "Frost Ward", 5 }, { 60, "Ice Armor", 4 },
+    { 60, "Fireball", 11, nil, "guide lists 12 ranks; check the trainer for the last one" },
+    { 60, "Polymorph", 4 }, { 60, "Dampen Magic", 5 }, { 60, "Polymorph: Cow" }, { 60, "Felfire", nil, nil, "new in Forever" },
     { 60, "Fire Ward", 5 }, { 60, "Blast Wave", 5, "fire" }, { 60, "Frostfire Bolt", 3 }, { 60, "Pyroblast", 8, "fire" },
     { 60, "Conjure Water", 7 }, { 60, "Conjure Food", 7 }, { 60, "Mana Shield", 6 }, { 60, "Arcane Blast", 5, "arcane" },
     { 60, "Arcane Wrath", 4, "arcane" },
@@ -276,26 +354,32 @@ D.Spells = {
 ------------------------------------------------------------------------
 D.Brackets = {
     { min = 1, max = 9,
+      aoe = "No AoE yet: single target and wand. Gnome Mage mana at 15 is only about 1,000-1,250.",
       water = "Ice Cold Milk (lvl 5-15) beats your conjured water.",
       wand = "Rush Lesser Magic Wand (lvl 5) - huge for its level.",
       extra = "Pick up First Aid right away and level it with you." },
     { min = 10, max = 19,
+      aoe = "Mobs 300-330 HP at 14-15, and you lack the mana for AoE until about 24. Quest single target.",
       water = "Melon Juice (lvl 15-25).",
       wand = "Greater Magic Wand (lvl 13) - check the Auction House.",
       extra = "Quest rewards: Staff of Westfall (Deadmines, A), Deepblaze (Halls of Thanes, A), Staff of Orgrimmar (RFC, H), Gnarled Necromancer's Staff (Ruins of Lordaeron, H). Class quest: Manaweave Robe (A) / Lesser Spellfire Robes (H)." },
     { min = 20, max = 29,
+      aoe = "Mobs 550-850 HP. AoE works from 24 (about 600 per cycle), efficient from 28 (about 850). Mana ~1,700-2,100 at 25: about 2 cycles per bar.",
       water = "Sweet Nectar (lvl 25-35).",
       wand = "Gravestone Scepter (Blackfathom Deeps quest, both factions).",
       extra = "Set your Hearthstone in your questing zone - you have city teleports now. Class quest: Astral Knot (A) / Nether-lace (H). Counterspell at 24." },
     { min = 30, max = 39,
+      aoe = "Mobs 1,100-2,300+ HP; one cycle does about 1,500 at 36. Big packs need Cold Snap and a second cycle. ~1.5-1.8 cycles per bar.",
       water = "Moonberry Juice (lvl 35-45).",
       wand = "Twisted Nether Wand (Auction House). Class quest: Icefury / Nether Force / Ragefire Wand.",
       extra = "Frost Armor becomes Ice Armor. Gnomeregan / Razorfen Kraul / SM Library quests have good caster gear." },
     { min = 40, max = 49,
+      aoe = "Mobs 2,300-5,000 HP; one cycle about 2,400 (2,500 HP mobs die), two cycles about 3,500. Skip AoE on 5,000 HP mobs.",
       water = "Morning Glory Dew (lvl 45-55).",
       wand = "Dreambough Wand or Lesser Eternal Wand (Auction House).",
       extra = "Portals at 40: sell portals in trade chat to fund training. Maraudon quests: Acumen Robes, Woodseed Hoop. Spellshifter Rod from Zul'Farrak." },
     { min = 50, max = 60,
+      aoe = "About 1.3-1.6 cycles per bar (5,300-6,300 mana at 60). Expect one pull per bar plus regen; Ice Barrier in every cycle.",
       water = "Your conjured water is best from here.",
       wand = "Greater Eternal Wand (Auction House).",
       extra = "Sunken Temple / Blackrock Depths quests for caster gear. Class quest: Glacial Spike / Arcane Crystal Pendant / Fire Ruby." },
@@ -311,6 +395,13 @@ D.GeneralTips = {
     "Don't buy ranks of spells your spec never casts - the Trainer tab marks them.",
     "Comprehend Scroll: search \"Scroll:\" on the AH. Skill breakpoints 1 / 15 / 50 / 175. Familiars give Intellect.",
     "XP food (+5%): Longjaw Mud Snapper, Smoked Sagefish, Twice-Spiced Raptor Slice.",
+    "Hotfix 13 Nov: Blizzard damage breaks Frost Nova. Nova -> Cone of Cold / Ice Lance, then Blizzard once they are free.",
+    "Cone of Cold slows for 6 sec now (not 8); Permafrost brings it back to 8.",
+    "Polymorph lasts 20 / 30 / 40 / 50 sec by rank and breaks on damage. Ranks 1-3 are enough while leveling.",
+    "Mana: 1 Intellect = 15 mana (the first 20 give 1 each). Gnome Expansive Mind is +5% total mana in Forever.",
+    "Arcane Mind: older notes say +20% Intellect, the current talent data says +10% Intellect and +100% Arcane crit damage.",
+    "Mage Armor and Arcane Meditation both keep 50% regen while casting; check in-game whether they stack.",
+    "Evocation: 8 sec channel, +1,500% mana regen, 8 min cooldown. Mana gems vanish after 15 min logged out.",
 }
 
 D.Professions = {

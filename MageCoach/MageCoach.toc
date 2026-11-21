@@ -1,8 +1,8 @@
 ## Interface: 16001
 ## Title: MageCoach
-## Notes: Mage leveling helper for WoW Forever: talent coach, trainer list, tips, map pins and zone suggestions.
+## Notes: Mage leveling helper for WoW Forever: Frost AoE build guide, talent coach, trainer list, AoE/mana tips, map pins and zone suggestions.
 ## Author: Felix
-## Version: 0.1.0
+## Version: 0.2.0
 ## SavedVariables: MageCoachDB
 ## SavedVariablesPerCharacter: MageCoachCharDB
 

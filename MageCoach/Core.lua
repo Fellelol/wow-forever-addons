@@ -36,7 +36,7 @@ end
 
 function MC:PathKey()
     local key = MageCoachCharDB and MageCoachCharDB.path
-    if not key or not D.Paths[key] then key = "arcane" end
+    if not key or not D.Paths[key] then key = D.DefaultPath or "arcane" end
     return key
 end
 
@@ -158,11 +158,16 @@ function MC:BuildTalents()
     local missingAt = {}
     for _, m in ipairs(st.missing) do missingAt[m.lvl] = true end
 
+    local seen = {}
     for i, name in ipairs(path.talents) do
         local lvl = i + 9
         local note = NoteFor(path, lvl)
         if note then tinsert(out, C(GOLD, "  " .. note)) end
+        seen[name] = (seen[name] or 0) + 1
+        local info = D.TalentInfo and D.TalentInfo[name]
         local line = format("%2d  %s", lvl, name)
+        if info then line = line .. format(" %d/%d", seen[name], info[3]) end
+        if info and seen[name] == 1 then line = line .. "  " .. C(GREY, "- " .. info[4]) end
         if lvl > level then
             line = C(GREY, line)
         elseif missingAt[lvl] then
@@ -175,7 +180,7 @@ function MC:BuildTalents()
         tinsert(out, line)
     end
     tinsert(out, " ")
-    tinsert(out, C(GREY, "Leveling build from the Mobalytics WoW Forever mage guide. Swap points freely."))
+    tinsert(out, C(GREY, "Built from the Mobalytics leveling guide, checked against the WoW Forever talent data (Nov 2026). Swap points freely."))
     return concat(out, "\n")
 end
 
@@ -240,6 +245,7 @@ function MC:BuildTips()
     tinsert(out, "  Water: " .. b.water)
     tinsert(out, "  Wand: " .. b.wand)
     tinsert(out, "  " .. b.extra)
+    if b.aoe then tinsert(out, "  " .. C(YELLOW, "AoE / mana: ") .. b.aoe) end
     tinsert(out, " ")
 
     tinsert(out, C(GOLD, "One-button macro") .. C(GREY, "  (type /mc macro)"))

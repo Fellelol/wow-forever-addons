@@ -120,8 +120,14 @@ end
 local function AoE(mobs, ground)
     -- Shared AoE logic: Nova when crowded, ground AoE if safe, else Arcane Explosion.
     if mobs >= 2 and Ready("Frost Nova") then return "Frost Nova", "root the pack" end
+    -- Since the 13 Nov hotfix Blizzard damage breaks Frost Nova: don't suggest it on a frozen pack.
+    local frozen = TargetFrozen()
+    if frozen and ground == "Blizzard" then
+        if Ready("Cone of Cold") then return "Cone of Cold", "frozen: Shatter (no Blizzard)" end
+        if Ready("Blink") then return "Blink", "get range, Blizzard when free" end
+    end
     if Ready("Arcane Explosion") then return "Arcane Explosion", "hold Shift" end
-    if ground and Ready(ground) then return ground, "hold Ctrl (at cursor)" end
+    if ground and Ready(ground) and not (frozen and ground == "Blizzard") then return ground, "hold Ctrl (at cursor)" end
 end
 
 local function TargetHealthPct()
@@ -210,6 +216,9 @@ PRIORITY.frostaoe = function(inCombat, mobs, aoe)
     if Ready("Ice Barrier") and not Buff("Ice Barrier") then return "Ice Barrier", "keep it up" end
     if aoe then
         if TargetFrozen() and Ready("Cone of Cold") then return "Cone of Cold", "Shatter combo" end
+        if not Ready("Frost Nova") and not Ready("Cone of Cold") and Ready("Cold Snap") then
+            return "Cold Snap", "reset Nova + Cone: second cycle"
+        end
         local s, why = AoE(mobs, "Blizzard"); if s then return s, why end
         if Ready("Cone of Cold") then return "Cone of Cold", "slow the pack" end
     end
@@ -239,7 +248,7 @@ end
 local COOLDOWNS = {
     arcane = { "Arcane Power", "Presence of Mind" },
     frost = { "Cold Snap" },
-    frostaoe = {},
+    frostaoe = { "Cold Snap" },
     fire = { "Combustion" },
 }
 
@@ -310,7 +319,8 @@ function MC:UpdateHelper()
     local inCombat = UnitAffectingCombat("player")
     local mobs, canCount = self:CountAttackers()
     local threshold = MageCoachDB.aoeThreshold or 3
-    if self:PathKey() == "frostaoe" then threshold = math.min(threshold, 2) end
+    -- Frost AoE goes AoE at 2+ mobs, but only from 24: below that there is not enough mana (build guide).
+    if self:PathKey() == "frostaoe" and self:Level() >= 24 then threshold = math.min(threshold, 2) end
     local aoe = mobs >= threshold
 
     local pathKey = self:PathKey()
