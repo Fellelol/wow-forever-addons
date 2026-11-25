@@ -1,0 +1,8 @@
+## Interface: 16001
+## Title: MageSlowFall
+## Notes: Space jumps on the ground, casts Slow Fall when you're in the air.
+## Author: Felix
+## Version: 1.0
+## SavedVariables: MageSlowFallDB
+
+MageSlowFall.lua
